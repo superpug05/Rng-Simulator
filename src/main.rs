@@ -1,8 +1,13 @@
 mod commands;
+mod utils;
 
-use std::fs::File;
+use std::{fs::File, collections::HashMap};
 use dotenv::dotenv;
-use commands::*;
+use commands::{
+    ping::ping,
+    ping::read_db,
+    start::start,
+};
 use poise::{
     futures_util::lock::Mutex,
     serenity_prelude as serenity,
@@ -28,10 +33,32 @@ async fn on_error(error: poise::FrameworkError<'_, Data, Error>) {
 
 #[tokio::main]
 async fn main() {
+    // Using .env for token
     dotenv().ok();
 
+    // Setting up database in case it doesn't exist or is empty
+    match File::open("db") {
+        Ok(f) => {
+            let size = f.metadata()
+            .expect("Issue getting database metadata")
+            .len();
+
+            if size == 0 {
+                utils::database::write_database("db", HashMap::new());
+            }
+        }
+        Err(_) => {
+            utils::database::write_database("db", HashMap::new());
+        }
+    }
+
+
     let options = poise::FrameworkOptions {
-        commands: vec![ping::ping(), ping::test()],
+        commands: vec![
+            ping(),
+            start(),
+            read_db(),
+        ],
         prefix_options: poise::PrefixFrameworkOptions {
             prefix: Some("r.".into()),
             ..Default::default()
