@@ -1,0 +1,3 @@
+# RNG Simulator
+
+cord bot
