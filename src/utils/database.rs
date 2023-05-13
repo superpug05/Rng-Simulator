@@ -6,7 +6,7 @@ use std::fs::{read, write};
 #[derive(Serialize, Deserialize, Debug)]
 pub struct User {
     pub balance: f64,
-    pub experience: f64,
+    pub experience: u32,
     pub cluck_level: u32,
     pub rluck_level: u32,
     pub inventory: Vec<Item>,
@@ -14,16 +14,16 @@ pub struct User {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Item {
-    rarity: u64,
-    class: u64,
-    quality: f64,
+    pub rarity: u32,
+    pub class: u32,
+    pub quality: f64,
 }
 
 impl Default for User {
     fn default() -> Self {
         User {
             balance: 0.0,
-            experience: 0.0,
+            experience: 0,
             cluck_level: 0,
             rluck_level: 0,
             inventory: vec![],
