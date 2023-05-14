@@ -64,8 +64,7 @@ pub async fn roll(ctx: Context<'_>) -> Result<(), Error> {
         quality: fastrand::f64(),
     };
     let gained_xp = fastrand::u32(30..=50);
-    let level = |xp: f64| (xp/300.0).log(1.03).floor();
-    let lvlup_text = if level((user.experience + gained_xp) as f64) > level(user.experience as f64) {
+    let lvlup_text = if user.level(gained_xp as f64) > user.level(0.0) {
         "LEVEL UP!"
     } else {
         ""
@@ -137,14 +136,14 @@ pub async fn roll(ctx: Context<'_>) -> Result<(), Error> {
                 [Rarity]; {} ({:.2})\n\
                 [Quality]; {:.2}\n\
                 [Class]; {} ({:.2})\n\
-                [Total Value]; {:.2}\n\
+                [Total Value]; ${:.2}\n\
                 ```",
                 get_rarity_name(&new_item.rarity),
                 new_item.rarity as f64 / 1_000_000f64,
                 new_item.quality,
-                get_rarity_name(&new_item.class),
+                get_class_name(&new_item.class),
                 new_item.class as f64 / 1_000_000f64,
-                new_item.rarity as f64 * 50f64 / new_item.class as f64 * 100f64
+                new_item.value()
             ))
         })
     }).await?;

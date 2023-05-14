@@ -31,6 +31,18 @@ impl Default for User {
     }
 }
 
+impl User {
+    pub fn level(&self, additional_xp: f64) -> u32 {
+        ((self.experience as f64 + additional_xp)/300.0).log(1.03).floor() as u32
+    }
+}
+
+impl Item {
+    pub fn value(&self) -> f64 {
+        500_000_000_000_000_000f64 / (self.class as f64).powf(1.5) / (self.rarity as f64).powf(1.5)
+    }
+}
+
 pub fn retrieve_database(db_path: &str) -> HashMap<u64, User> {
     let database = read(db_path).expect("Issue reading the file into a vector");
     from_bytes(&database).expect("Issue deserializing the database")
