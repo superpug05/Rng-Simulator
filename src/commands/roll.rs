@@ -148,5 +148,9 @@ pub async fn roll(ctx: Context<'_>) -> Result<(), Error> {
         })
     }).await?;
 
+    let db_guard = ctx.data().file_lock.lock().await;
+    let mut database = retrieve_database(db_guard.as_str());
+    database[ctx.author().id.as_u64()].inventory.push(new_item);
+    write_database(db_guard.as_str(), database);
     Ok(())
 }
