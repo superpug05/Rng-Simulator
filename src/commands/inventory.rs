@@ -1,8 +1,5 @@
-use std::fmt::format;
 
-use poise::futures_util::future::ok;
-
-use crate::{Context, Error, utils::database::retrieve_database, utils::database::User};
+use crate::{Context, Error, utils::database::retrieve_database,};
 
 #[poise::command(prefix_command)]
 pub async fn inv(ctx: Context<'_>) -> Result<(), Error> {
